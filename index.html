@@ -14,10 +14,9 @@
       <video 
   id="reel-1" 
   src="My_fav.mp4" 
-  autoplay loop muted 
+  loop muted 
   onpointerdown="this.pause()" 
-  onpointerup="this.play()" 
-  onpointerleave="this.play()">
+  onpointerup="this.play()">
 </video>
       
       <div class="sidebar">
@@ -33,10 +32,9 @@
       <video 
   id="reel-2" 
   src="My_fav2.mp4" 
-  autoplay loop muted 
+  loop muted 
   onpointerdown="this.pause()" 
-  onpointerup="this.play()" 
-  onpointerleave="this.play()">
+  onpointerup="this.play()">
 </video>
       
       <div class="sidebar">
@@ -54,8 +52,7 @@
   src="My_fav3.mp4" 
   autoplay loop muted 
   onpointerdown="this.pause()" 
-  onpointerup="this.play()" 
-  onpointerleave="this.play()">
+  onpointerup="this.play()">
 </video>
       
       <div class="sidebar">
@@ -67,8 +64,8 @@
       </div>
     </div>
   </div>
-    <script>
-    // 1. THE GLOBAL MEMORY (Starts muted when you open the site)
+        <script>
+    // 1. THE GLOBAL MEMORY
     let isGlobalMuted = true; 
 
     // 2. THE BUTTON CLICK LOGIC
@@ -76,14 +73,13 @@
       var video = document.getElementById(videoId);
       var buttonElement = document.getElementById(btnId);
 
-      // Flip the global memory
       if (isGlobalMuted === true) {
-        isGlobalMuted = false; // Turn memory ON
-        video.muted = false;   // Unmute the video
+        isGlobalMuted = false; 
+        video.muted = false;   
         buttonElement.innerHTML = "🔊<span>Unmute</span>";
       } else {
-        isGlobalMuted = true;  // Turn memory OFF
-        video.muted = true;    // Mute the video
+        isGlobalMuted = true;  
+        video.muted = true;    
         buttonElement.innerHTML = "🔇<span>Mute</span>";
       }
     }
@@ -94,19 +90,14 @@
     const watcher = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         
-        // Find the matching button for the video that just scrolled in
-        // (It changes "reel-1" into "mute-btn-1")
         let videoId = entry.target.id;
         let btnId = videoId.replace('reel', 'mute-btn');
         let buttonElement = document.getElementById(btnId);
 
         if (entry.isIntersecting) {
           // YES: Video is on screen!
-          
-          // First, apply the global memory to this video
           entry.target.muted = isGlobalMuted;
           
-          // Second, update the button icon so it matches
           if (buttonElement) {
             if (isGlobalMuted === true) {
               buttonElement.innerHTML = "🔇<span>Mute</span>";
@@ -114,20 +105,18 @@
               buttonElement.innerHTML = "🔊<span>Unmute</span>";
             }
           }
-
-          // Finally, play the video
-          entry.target.play();
+          entry.target.play(); // Let the Watcher press play!
           
         } else {
-          // NO: Video scrolled away. Just pause it to save battery.
-          entry.target.pause();
+          // NO: Video scrolled away. 
+          entry.target.pause(); // Force it to stop!
+          entry.target.muted = true; // Safety catch: force it to mute!
         }
       });
     }, {
       threshold: 0.6 
     });
 
-    // Attach the Watcher to all videos
     allVideos.forEach(video => {
       watcher.observe(video);
     });
