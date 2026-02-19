@@ -1,0 +1,69 @@
+/* Reset basic spacing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: black;
+  font-family: Arial, sans-serif;
+}
+h1 {
+  color: white;
+  text-align: center;
+  font-style: italic;
+  font-family: bold;
+}
+
+/* 1. THE SWIPE MAGIC */
+.app-container {
+  height: 100vh; /* Takes up 100% of the screen height */
+  overflow-y: scroll; /* Allows scrolling up and down */
+  scroll-snap-type: y mandatory; /* Forces the swipe to "snap" to the next video */
+}
+
+/* Hide the ugly scrollbar for a real app feel */
+.app-container::-webkit-scrollbar {
+  display: none; 
+}
+
+/* 2. EACH INDIVIDUAL REEL */
+.reel {
+  height: 100vh; /* Each video takes up the full screen */
+  width: 100vw; /* Full width */
+  scroll-snap-align: start; /* Tells the snap where to stop */
+  position: relative; /* Needed to put the sidebar on top of the video */
+}
+
+/* 3. THE VIDEO PLAYER */
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Zooms the video nicely so there are no black borders */
+}
+
+/* 4. THE SIDEBAR (Likes, Comments) */
+.sidebar {
+  position: absolute;
+  right: 15px;
+  bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between icons */
+}
+
+.icon {
+  color: white;
+  font-size: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon span {
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: bold;
+}
