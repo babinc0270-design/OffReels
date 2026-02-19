@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link href="style21.css" rel="stylesheet">
+    </head>
+    <body>
+      <h1>OffReels</h1>
+  <div class="app-container">
+
+    <div class="reel">
+      <video 
+  id="reel-1" 
+  src="My_fav.mp4" 
+  autoplay loop muted 
+  onpointerdown="this.pause()" 
+  onpointerup="this.play()" 
+  onpointerleave="this.play()">
+</video>
+      
+      <div class="sidebar">
+        <div class="icon">❤️<span>23k</span></div>
+        <div class="icon">💬<span>1k</span></div>
+        <div class="icon">↗️<span>Share</span></div>
+        <div class="icon">🔖<span>Save</span></div>
+        <div class="icon" onclick="toggleSound('reel-1', this)">🔇<span>Mute</span></div>
+      </div>
+    </div>
+
+    <div class="reel">
+      <video 
+  id="reel-2" 
+  src="My_fav2.mp4" 
+  autoplay loop muted 
+  onpointerdown="this.pause()" 
+  onpointerup="this.play()" 
+  onpointerleave="this.play()">
+</video>
+      
+      <div class="sidebar">
+        <div class="icon">❤️<span>10k</span></div>
+        <div class="icon">💬<span>500</span></div>
+        <div class="icon">↗️<span>Share</span></div>
+        <div class="icon">🔖<span>Save</span></div>
+        <div class="icon" onclick="toggleSound('reel-2', this)">🔇<span>Mute</span></div>
+      </div>
+    </div>
+    
+  <div class="reel">
+      <video 
+  id="reel-3" 
+  src="My_fav3.mp4" 
+  autoplay loop muted 
+  onpointerdown="this.pause()" 
+  onpointerup="this.play()" 
+  onpointerleave="this.play()">
+</video>
+      
+      <div class="sidebar">
+        <div class="icon">❤️<span>10k</span></div>
+        <div class="icon">💬<span>500</span></div>
+        <div class="icon">↗️<span>Share</span></div>
+        <div class="icon">🔖<span>Save</span></div>
+        <div class="icon" onclick="toggleSound('reel-3', this)">🔇<span>Mute</span></div>
+      </div>
+    </div>
+  </div>
+    <script>
+    // 1. THE GLOBAL MEMORY (Starts muted when you open the site)
+    let isGlobalMuted = true; 
+
+    // 2. THE BUTTON CLICK LOGIC
+    function toggleSound(videoId, btnId) {
+      var video = document.getElementById(videoId);
+      var buttonElement = document.getElementById(btnId);
+
+      // Flip the global memory
+      if (isGlobalMuted === true) {
+        isGlobalMuted = false; // Turn memory ON
+        video.muted = false;   // Unmute the video
+        buttonElement.innerHTML = "🔊<span>Unmute</span>";
+      } else {
+        isGlobalMuted = true;  // Turn memory OFF
+        video.muted = true;    // Mute the video
+        buttonElement.innerHTML = "🔇<span>Mute</span>";
+      }
+    }
+
+    // 3. THE SMART SCROLLING WATCHER
+    const allVideos = document.querySelectorAll('video');
+
+    const watcher = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        
+        // Find the matching button for the video that just scrolled in
+        // (It changes "reel-1" into "mute-btn-1")
+        let videoId = entry.target.id;
+        let btnId = videoId.replace('reel', 'mute-btn');
+        let buttonElement = document.getElementById(btnId);
+
+        if (entry.isIntersecting) {
+          // YES: Video is on screen!
+          
+          // First, apply the global memory to this video
+          entry.target.muted = isGlobalMuted;
+          
+          // Second, update the button icon so it matches
+          if (buttonElement) {
+            if (isGlobalMuted === true) {
+              buttonElement.innerHTML = "🔇<span>Mute</span>";
+            } else {
+              buttonElement.innerHTML = "🔊<span>Unmute</span>";
+            }
+          }
+
+          // Finally, play the video
+          entry.target.play();
+          
+        } else {
+          // NO: Video scrolled away. Just pause it to save battery.
+          entry.target.pause();
+        }
+      });
+    }, {
+      threshold: 0.6 
+    });
+
+    // Attach the Watcher to all videos
+    allVideos.forEach(video => {
+      watcher.observe(video);
+    });
+  </script>
+</html>
